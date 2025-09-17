@@ -1,0 +1,41 @@
+.main-content { padding: 30px; }
+        .content-box { background-color: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .details-grid { display: grid; grid-template-columns: 200px 1fr; gap: 15px; margin-top: 20px; }
+        .details-grid dt { font-weight: 600; color: #555; }
+        .details-grid dd { margin: 0; color: #333; }
+        .plan-name { font-size: 1.5em; font-weight: 600; color: #1D5F60; }
+        .no-subscription { text-align: center; padding: 50px; }
+        .button-group { display: flex; justify-content: flex-start; gap: 15px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
+        .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .alert-success { background-color: #d4edda; color: #155724; }
+        .alert-error { background-color: #f8d7da; color: #721c24; }
+
+        /* Unified Button Styles */
+        .unified-btn {
+            display: inline-block;
+            min-width: 180px;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            margin: 5px;
+        }
+        .confirm-btn-style {
+            background-color: #2C7A7B;
+            color: white;
+        }
+        .confirm-btn-style:hover {
+            background-color: #1D5F60;
+        }
+        .cancel-btn-style {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .cancel-btn-style:hover {
+            background-color: #c0392b;
+        }

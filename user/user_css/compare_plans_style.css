@@ -1,0 +1,328 @@
+    /* Compare Plans Section Styles */
+        .compare-plans-section {
+            padding: 40px 0 60px;
+            background-color: #f9f9f9;
+            background-image: url('assets/patterns/food-pattern.png');
+            background-repeat: repeat;
+            background-size: 300px;
+            /* removed invalid background-opacity */
+        }
+        
+        .pattern-bg {
+            position: relative;
+        }
+        
+        .pattern-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.9);
+            z-index: 0;
+        }
+        
+        .compare-plans-section .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        .section-subtitle {
+            font-size: 16px;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        
+        .plans-comparison {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+        
+        .plan-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-medium);
+        }
+        
+        .plan-header {
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .plan-header.basic {
+            background-color: var(--primary-color);
+        }
+        
+        .plan-header.premium {
+            background-color: var(--secondary-color);
+        }
+        
+        .plan-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .plan-price {
+            font-size: 20px;
+            font-weight: 500;
+        }
+        
+        .menu-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .menu-table th {
+            background-color: #f5f5f5;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .menu-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+        
+        .menu-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .meal-option {
+            margin-bottom: 5px;
+        }
+        
+        .veg-option {
+            color: #2C7A7B !important;
+            font-weight: 500;
+        }
+        
+        .nonveg-option {
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: var(--transition-medium);
+        }
+        
+        .back-btn:hover {
+            background-color: #1D5F60;
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .compare-plans-section {
+                padding: 30px 0 50px;
+            }
+            
+            .section-title {
+                font-size: 26px;
+            }
+            
+            .plan-name {
+                font-size: 20px;
+            }
+            
+            .plan-price {
+                font-size: 18px;
+            }
+            
+            .menu-table th, 
+            .menu-table td {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+        /* Animation Classes */
+        .slide-in-left {
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+        
+        .bounce-in {
+            animation: bounceIn 0.8s ease-out forwards;
+        }
+        
+        @keyframes slideInLeft {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        /* Popular Meals Section */
+        .popular-meals {
+            padding: 40px 0;
+            background-color: #fff;
+        }
+        
+        .meals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .meal-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        
+        .meal-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .meal-img {
+            height: 180px;
+            width: 100%;
+            object-fit: cover;
+        }
+        
+        .meal-info {
+            padding: 20px;
+        }
+        
+        .meal-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark-color);
+        }
+        
+        .meal-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        .meal-type {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .type-basic {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .type-premium {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        /* Updated Compare Plans Section */
+        .compare-plans-section {
+            padding: 40px 0;
+        }
+        
+        .plans-comparison {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            perspective: 1000px;
+        }
+        
+        .plan-container {
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+        }
+        
+        .plan-container:hover {
+            transform: translateY(-5px);
+        }
+        
+        .plan-header {
+            transition: all 0.3s ease;
+        }
+        
+        .plan-header:hover {
+            transform: scale(1.02);
+        }
+
+/* Price slideshow styles */
+.price-slideshow {
+    position: relative;
+    height: 60px; /* Adjust based on your needs */
+    overflow: hidden;
+}
+
+.price-slide {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    transition: all 0.5s ease;
+    opacity: 0;
+}
+
+.price-slide.active {
+    opacity: 1;
+}
+
+/* Animation for the slideshow */
+@keyframes slideIn {
+    0% { transform: translateY(20px); opacity: 0; }
+    20% { transform: translateY(0); opacity: 1; }
+    80% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-20px); opacity: 0; }
+}
+
+.price-slide {
+    animation: slideIn 6s infinite;
+}
+
+.price-slide:nth-child(1) { animation-delay: 0s; }
+.price-slide:nth-child(2) { animation-delay: 2s; }
+.price-slide:nth-child(3) { animation-delay: 4s; }

@@ -1,0 +1,23 @@
+The user was facing an issue where the cart was not updating correctly when a user changed their subscription plan. The old meal selections from the previous plan were still being displayed. This was happening because the `selected_meals` table was not being cleared when a plan is removed from the cart.
+
+Here's the summary of the changes I made to fix this issue:
+
+1.  **Analyzed the database schema:** I examined the `tiffinlysept9dbwithsessionfinal.sql` file to understand the relationship between users, plans, and selected meals. I identified the tables that store cart information and meal selections.
+
+2.  **Examined `cart.php`:** I reviewed the code in `c:\xampp\htdocs\tiffinlysept9final\user\cart.php` to understand how the cart is displayed and how the "Remove Plan" functionality is implemented.
+
+3.  **Examined `browse_plans.php` and `select_plan.php`:** I checked `c:\xampp\htdocs\tiffinlysept9final\user\browse_plans.php` and `c:\xampp\htdocs\tiffinlysept9final\user\select_plan.php` to see how plans are added to the cart.
+
+4.  **Identified the problem:** Based on my analysis of the code and database, I pinpointed the exact reason why the `selected_meals` are not being removed. I found that there was a missing query to delete the meals from the `selected_meals` table when a plan is removed.
+
+5.  **Implemented the solution:** I added the necessary code to `cart.php` to delete the user's selected meals for a specific plan from the `selected_meals` table when the "Remove Plan" button is clicked and confirmed.
+
+I have provided the full code for the following files:
+
+*   `c:\xampp\htdocs\tiffinlysept9final\user\cart.php`
+*   `c:\xampp\htdocs\tiffinlysept9final\user\customize_meals.php`
+*   `c:\xampp\htdocs\tiffinlysept9final\user\select_plan.php`
+*   `c:\xampp\htdocs\tiffinlysept9final\user\browse_plans.php`
+*   `c:\xampp\htdocs\tiffinlysept9final\tiffinlysept9dbwithsessionfinal.sql`
+
+These changes should resolve the issue of the cart not updating correctly and old meal selections being displayed.

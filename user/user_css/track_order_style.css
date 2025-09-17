@@ -1,0 +1,449 @@
+/* General Styles */
+:root {
+    --primary-color: #2C7A7B;
+    --secondary-color: #F39C12;
+    --accent-color: #F1C40F;
+    --dark-color: #2C3E50;
+    --light-color: #F9F9F9;
+    --success-color: #27AE60;
+    --warning-color: #E67E22;
+    --danger-color: #E74C3C;
+    --light-gray: #ECF0F1;
+    --border-radius: 8px;
+    --box-shadow: 0 2px 8px rgba(44,122,123,0.09);
+    --transition: all 0.3s ease;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.main-content {
+    padding: 30px;
+    background-color: var(--light-color);
+    min-height: calc(100vh - 70px);
+    overflow-y: auto;
+}
+
+.content-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 28px 32px;
+    box-shadow: var(--box-shadow);
+    margin-bottom: 25px;
+    border: 1.5px solid #e9ecef;
+    transition: var(--transition);
+}
+
+.content-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(44,122,123,0.15);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state i {
+    font-size: 5rem;
+    color: #2C7A7B;
+    opacity: 0.3;
+    margin-bottom: 20px;
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.empty-state p {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #2C7A7B;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #1D5F60;
+}
+
+/* Tracking Container */
+.tracking-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+    margin-top: 20px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Partner Card */
+.partner-card, .delivery-details-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 25px;
+    border: 1.5px solid #e9ecef;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+}
+
+.partner-card:hover, .delivery-details-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(44,122,123,0.15);
+}
+
+/* Card Title */
+.card-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1D5F60;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+/* Partner Info */
+.partner-info .info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.partner-info .info-item:hover {
+    background: #f1f3f5;
+    transform: translateX(3px);
+}
+
+.partner-info .info-item i {
+    font-size: 1.1rem;
+    color: var(--primary-color);
+    min-width: 24px;
+    text-align: center;
+    margin-top: 2px;
+}
+
+.partner-info .info-item .label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 3px;
+}
+
+.partner-info .info-item .value {
+    font-size: 1rem;
+    color: #333;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* Meal Item */
+.meal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 22px;
+    background-color: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+}
+
+.meal-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-color: var(--primary-color);
+}
+
+.meal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.meal-type {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.delivery-time {
+    font-size: 0.9rem;
+    color: #555;
+    background: #e9f7f7;
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+
+.meal-contents ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.meal-contents li {
+    padding: 5px 0;
+    color: #444;
+}
+
+.meal-contents li i {
+    color: #27ae60;
+    margin-right: 8px;
+}
+
+.delivery-status {
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+.status-pending {
+    color: #f39c12;
+}
+
+.status-delivered {
+    color: #27ae60;
+}
+
+.status-not-delivered {
+    color: #e74c3c;
+}
+
+/* Timeline Styles */
+.timeline {
+    position: relative;
+    padding-left: 50px;
+    margin: 25px 0;
+}
+
+.timeline:before {
+    content: '';
+    position: absolute;
+    left: 23px;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    background-color: #e9ecef;
+    z-index: 0;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 25px;
+    padding-bottom: 5px;
+    animation: slideInRight 0.4s ease-out;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.timeline-item.active .timeline-icon {
+    background-color: #2C7A7B;
+    color: white;
+    border-color: #2C7A7B;
+    box-shadow: 0 0 0 4px rgba(44, 122, 123, 0.2);
+}
+
+.timeline-icon {
+    position: absolute;
+    left: -50px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 2px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+.timeline-content {
+    padding: 16px 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.timeline-content:before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 20px;
+    width: 15px;
+    height: 15px;
+    background: #fff;
+    transform: rotate(45deg);
+    border-left: 1px solid #e9ecef;
+    border-bottom: 1px solid #e9ecef;
+    z-index: 1;
+}
+
+.timeline-content h4 {
+    margin: 0 0 8px 0;
+    color: #2C3E50;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.timeline-content p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.timeline-item.active .timeline-content {
+    background-color: #f8f9fa;
+    border-left: 3px solid #2C7A7B;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.timeline-time {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.timeline-time i {
+    font-size: 0.9em;
+}
+
+/* Past Deliveries */
+.past-deliveries-card {
+    margin-top: 20px;
+}
+
+.form-select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.meal-details {
+    margin-top: 15px;
+}
+
+.meal-detail-item {
+    background: #f9f9f9;
+    border-radius: 6px;
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    border-left: 4px solid #4CAF50;
+}
+
+.status-badge {
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-delivered,
+.status-completed {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-pending {
+    background-color: #fff3e0;
+    color: #ef6c00;
+}
+
+.not-delivered,
+.not-scheduled {
+    color: #757575;
+    font-style: italic;
+    font-size: 14px;
+}
+
+.meal-items {
+    margin-top: 5px;
+}
+
+.meal-item .meal-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    color: #424242;
+}
+
+.meal-item .meal-item i {
+    color: #757575;
+    font-size: 12px;
+}
+
+.no-menu {
+    color: #9e9e9e;
+    font-style: italic;
+    font-size: 14px;
+}
+
+.no-deliveries {
+    text-align: center;
+    padding: 20px 0;
+    color: #757575;
+}
+
+.no-deliveries i {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #e0e0e0;
+}
+
+.delivery-summary {
+    font-size: 13px;
+    color: #2C3E50;
+    margin-bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+}
+
+.delivery-summary>div {
+    color: #2C7A7B;
+}
+
+.delivery-address {
+    margin-top: 8px;
+    color: #555;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .tracking-container {
+        grid-template-columns: 1fr;
+    }
+}

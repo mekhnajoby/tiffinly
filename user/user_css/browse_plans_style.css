@@ -1,0 +1,275 @@
+/* Meal Plans Section Styles */
+.meal-plans-section {
+    padding: 40px 0;
+    background-color: #f9f9f9;
+    background-repeat: repeat;
+    background-size: 300px;
+}
+
+.pattern-bg {
+    position: relative;
+}
+
+.pattern-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: 0;
+}
+
+.meal-plans-section .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.section-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--dark-color);
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+.section-subtitle {
+    font-size: 16px;
+    color: #666;
+    max-width: 600px;
+    margin: 0 0 20px 0;
+    text-align: left;
+}
+
+.plans-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.meal-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-medium);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 480px;
+}
+
+.meal-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.slideshow-container {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+}
+
+.slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.slide-nav {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    z-index: 2;
+}
+
+.slide-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.slide-dot.active {
+    background: white;
+    transform: scale(1.2);
+}
+
+.card-body {
+    padding: 25px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.plan-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 5px;
+}
+
+.plan-badge {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.plan-badge.popular {
+    background-color: var(--secondary-color);
+}
+
+.plan-description {
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.plan-features {
+    margin-bottom: 25px;
+}
+
+.feature-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+.feature-row:last-child {
+    border-bottom: none;
+}
+
+.feature-text {
+    font-size: 14px;
+    color: #555;
+    flex: 1;
+}
+
+.feature-check {
+    color: var(--primary-color);
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+/* Static Price Display Styles */
+.price-container {
+    margin: 15px 0;
+    text-align: left;
+}
+
+.price-option {
+    margin-bottom: 30px;
+}
+
+.price-amount {
+    font-size: 25px;
+    font-weight: 700;
+    color: var(--primary-color);
+    display: inline-block;
+    line-height: 1.2;
+}
+
+.price-period {
+    font-size: 14px;
+    color: #777;
+        display: inline-block; /* Changed from block to inline-block */
+    vertical-align: top;   /* Aligns better with larger text */
+    margin-left: 8px;      /* Optional: adds space between amount and period */
+
+}
+
+.subscribe-btn {
+    margin-top: auto;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px;
+    font-weight: 600;
+    transition: var(--transition-medium);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.subscribe-btn:hover {
+    background-color: #1D5F60;
+    transform: translateY(-2px);
+}
+
+.title-badge-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+    .plans-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+    
+    .meal-card {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .meal-plans-section {
+        padding: 40px 0;
+    }
+    
+    .section-title {
+        font-size: 26px;
+    }
+    
+    .slideshow-container {
+        height: 220px;
+    }
+    
+    .plan-title {
+        font-size: 20px;
+    }
+    
+    .card-body {
+        padding: 20px;
+    }
+    
+    .price-amount {
+        font-size: 20px;
+    }
+}
