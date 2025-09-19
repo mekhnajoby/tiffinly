@@ -106,7 +106,10 @@ $feedback_stmt->close();
     .main-content{padding:30px;background:var(--light);height:100vh;overflow-y:auto;display:flex;flex-direction:column}
     .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
     .header h1{margin:0;font-size:28px;position:relative}
-    .header h1:after{content:'';position:absolute;bottom:-5px;left:0;width:50px;height:3px;background:var(--primary-color);border-radius:3px}
+    .header h1:after{content:'';position:absolute;bottom:-5px;left:0;width:50px;height:3px;background:var(--primary-color);border-radius:3px;transition: all 0.3s ease;}
+    .header:hover h1:after {
+        width: 100%;
+    }
     .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:20px}
     .stat-card{background:#fff;border:1px solid var(--light-gray);border-radius:12px;padding:18px}
     .stat-card h3{margin:0 0 6px 0;font-size:14px;color:#666}

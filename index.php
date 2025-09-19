@@ -144,85 +144,73 @@ $userName = $_SESSION['name'] ?? '';
             </div>
 
             <div class="row justify-content-center">
-                <div class="col-lg-5 col-md-6 mb-4">
-                    <div class="meal-card">
-                        <div class="overflow-hidden">
-                            <img src="assets/meals/idlichutney.jpg" 
-                                 alt="Basic Meal Plan" class="img-fluid">
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h3 class="plan-title mb-0">Basic Plan</h3>
-                                <span class="plan-badge popular">Most Popular</span>
-                            </div>
-                            <p class="plan-description">
-                                Simple meals. Perfect for students and individuals looking for
-                                daily meals at an affordable price.
-                            </p>
-                            <div class="plan-features">
-                                <div class="feature-row">
-                                        <span class="feature-text">Simple veg/non-veg meals</span>
-                                        <i class="fas fa-check feature-check"></i>
-                                    </div>
-                                    <div class="feature-row">
-                                        <span class="feature-text">No meal customization</span>
-                                        <i class="fas fa-check feature-check"></i>
-                                    </div>
-                                    <div class="feature-row">
-                                        <span class="feature-text">Simple eco-packaging</span>
-                                        <i class="fas fa-check feature-check"></i>
-                                    </div>
-                            </div>
-                            <div class="plan-price">
-                                    <span class="price-amount">₹250</span>
-                                    <span class="price-period">/day</span>
-                            </div>
-                             <button class="btn btn-primary btn-lg w-100 subscribe-btn" onclick="selectPlan('basic')">
-                            Choose Basic Plan
-                        </button>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                require_once 'config/db_connect.php';
 
+                $plans = [];
+                $sql = "SELECT plan_id, plan_name, description, plan_type, base_price FROM meal_plans WHERE is_active = 1 ORDER BY FIELD(plan_type, 'basic', 'premium')";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    while($row = $result->fetch_assoc()) {
+                        $plans[$row['plan_id']] = $row;
+                    }
+                }
+
+                foreach ($plans as $plan_id => $plan) {
+                    $features_sql = "SELECT feature_text FROM plan_features WHERE plan_id = {$plan_id} ORDER BY sort_order";
+                    $features_result = $conn->query($features_sql);
+                    $features = [];
+                    if ($features_result->num_rows > 0) {
+                        while($feature_row = $features_result->fetch_assoc()) {
+                            $features[] = $feature_row['feature_text'];
+                        }
+                    }
+                    $plans[$plan_id]['features'] = $features;
+                }
+
+                foreach ($plans as $plan):
+                ?>
                 <div class="col-lg-5 col-md-6 mb-4">
                     <div class="meal-card">
                         <div class="overflow-hidden">
-                            <img src="assets/meals/curdrice.jpg" 
-                                 alt="Premium Meal Plan" class="img-fluid">
+                            <?php if ($plan['plan_type'] === 'basic'): ?>
+                                <img src="assets/meals/idlichutney.jpg" alt="Basic Meal Plan" class="img-fluid">
+                            <?php else: ?>
+                                <img src="assets/meals/curdrice.jpg" alt="Premium Meal Plan" class="img-fluid">
+                            <?php endif; ?>
                         </div>
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h3 class="plan-title mb-0">Premium Plan</h3>
-                                <span class="plan-badge">Best Value</span>
+                                <h3 class="plan-title mb-0"><?php echo htmlspecialchars($plan['plan_name']); ?> Plan</h3>
+                                <?php if ($plan['plan_type'] === 'basic'): ?>
+                                    <span class="plan-badge popular">Most Popular</span>
+                                <?php else: ?>
+                                    <span class="plan-badge">Best Value</span>
+                                <?php endif; ?>
                             </div>
                             <p class="plan-description">
-                                Enhanced meal experience with premium ingredients and additional
-                                items for savouring taste.
+                                <?php echo htmlspecialchars($plan['description']); ?>
                             </p>
                             <div class="plan-features">
-                                    <div class="feature-row">
-                                        <span class="feature-text">Customizable menu</span>
-                                        <i class="fas fa-check feature-check"></i>
-                                    </div>
-                                    <div class="feature-row">
-                                        <span class="feature-text">Deserts available</span>
-                                        <i class="fas fa-check feature-check"></i>
-                                    </div>
-                                    <div class="feature-row">
-                                        <span class="feature-text">Premium Packaging</span>
-                                        <i class="fas fa-check feature-check"></i>
-                                    </div>
+                                <?php foreach ($plan['features'] as $feature): ?>
+                                <div class="feature-row">
+                                    <span class="feature-text"><?php echo htmlspecialchars($feature); ?></span>
+                                    <i class="fas fa-check feature-check"></i>
+                                </div>
+                                <?php endforeach; ?>
                             </div>
                             <div class="plan-price">
-                                    <span class="price-amount">₹320</span>
+                                    <span class="price-amount">₹<?php echo htmlspecialchars(number_format($plan['base_price'], 0)); ?></span>
                                     <span class="price-period">/day</span>
                             </div>
-                            <button class="btn btn-primary btn-lg w-100 subscribe-btn" onclick="selectPlan('premium')">
-                            Choose Premium Plan
+                             <button class="btn btn-primary btn-lg w-100 subscribe-btn" onclick="selectPlan('<?php echo $plan['plan_type']; ?>')">
+                            Choose <?php echo htmlspecialchars($plan['plan_name']); ?> Plan
                         </button>
                         </div>
                     </div>
                 </div>
+                <?php endforeach; ?>
             </div>
         </div>
     </section>

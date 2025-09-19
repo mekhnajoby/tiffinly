@@ -138,7 +138,7 @@ $securityAnswerHashed = password_hash($securityAnswerRaw, PASSWORD_BCRYPT);
         if (empty($deliveryFields['aadhar_number'])) {
             $errors['aadhar_number'] = 'Aadhar number is required.';
         } elseif (!preg_match("/^\d{12}$/", $deliveryFields['aadhar_number'])) {
-            $errors['aadhar_number'] = 'Aadhar number must be 10 digits.';
+            $errors['aadhar_number'] = 'Aadhar number must be 12 digits.';
         }
 
         // Validate availability

@@ -14,14 +14,15 @@ $admin_email = $_SESSION['email'];
 // Fetch delivery history (delivered or cancelled)
 $history_sql = "
     SELECT
-        s.subscription_id, s.start_date, s.end_date, s.schedule, s.plan_id, s.dietary_preference,
+    s.subscription_id, s.start_date, s.end_date, s.schedule, s.plan_id, s.dietary_preference, s.status,
         u.name as user_name, u.phone, u.user_id,
         p.name as partner_name,
         p.phone as partner_phone,
         mp.plan_name,
         da.assignment_id,
         da.status as delivery_status,
-        da.meal_type,
+    da.meal_type,
+    m.meal_name,
         da.delivery_date,
         da.assigned_at,
         dp.time_slot,
@@ -30,10 +31,11 @@ $history_sql = "
     JOIN users u ON s.user_id = u.user_id
     JOIN meal_plans mp ON s.plan_id = mp.plan_id
     LEFT JOIN delivery_assignments da ON s.subscription_id = da.subscription_id
+    LEFT JOIN meals m ON da.meal_id = m.meal_id
     LEFT JOIN users p ON da.partner_id = p.user_id
     LEFT JOIN delivery_preferences dp ON s.user_id = dp.user_id AND LOWER(da.meal_type) = LOWER(dp.meal_type)
     LEFT JOIN addresses a ON dp.address_id = a.address_id
-    WHERE s.status = 'active'
+    WHERE s.status IN ('active', 'completed')
     ORDER BY s.subscription_id DESC, da.delivery_date DESC, FIELD(da.meal_type, 'Breakfast', 'Lunch', 'Dinner')
 ";
 
@@ -44,7 +46,7 @@ while ($row = $history_res->fetch_assoc()) {
     $sid = $row['subscription_id'];
     if (!isset($history[$sid])) {
         $history[$sid] = [
-            'details' => $row,
+            'details' => array_merge($row, ['status' => $row['status'] ?? ($row['delivery_status'] ?? '')]),
             'items_by_date' => []
         ];
     }
@@ -117,9 +119,11 @@ while ($row = $history_res->fetch_assoc()) {
         .info-item .label { color: #888; font-size: 14px; }
         .info-item .value { font-weight: 500; }
 
-        .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
-        .badge.delivered { background: #e8f5e9; color: #2e7d32; }
-        .badge.cancelled { background: #fdecea; color: #c62828; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+    .badge.delivered { background: #e8f5e9; color: #2e7d32; }
+    .badge.cancelled { background: #fdecea; color: #c62828; }
+    .badge.active { background: #F39C12; color: #fff; }
+    .badge.completed { background: #e8f5e9; color: #2e7d32; }
 
         .date-scroller {
             overflow-x: auto;
@@ -214,7 +218,16 @@ while ($row = $history_res->fetch_assoc()) {
                         <div class="card-header">
                             <div class="icon"><i class="fas fa-box"></i></div>
                             <div>
-                                <div class="title">Subscription #<?php echo (int)$sub_id; ?></div>
+                                <div class="title">Subscription #<?php echo (int)$sub_id; ?>
+                                    <?php
+                                    $sub_status = $data['details']['status'] ?? '';
+                                    if ($sub_status === 'active') {
+                                        echo '<span class="badge active" style="margin-left:10px;">Active</span>';
+                                    } elseif ($sub_status === 'completed') {
+                                        echo '<span class="badge completed" style="margin-left:10px;">Completed</span>';
+                                    }
+                                    ?>
+                                </div>
                                 <div style="font-size: 14px; color: #888;">
                                     <?php echo date('d M Y', strtotime($data['details']['start_date'])); ?> to <?php echo date('d M Y', strtotime($data['details']['end_date'])); ?>
                                 </div>
@@ -278,16 +291,21 @@ while ($row = $history_res->fetch_assoc()) {
                                                 <i class="far fa-calendar-alt"></i> <?php echo date('d M Y, l', strtotime($date)); ?>
                                             </h4>
                                             <?php foreach ($items as $item): ?>
-                                            <div style="display:flex; align-items:center; gap:12px; padding:8px; border-radius:6px; margin-bottom:6px; background:#fdfdfd;">
+                                            <div style="display:flex; align-items:center; gap:18px; padding:8px; border-radius:6px; margin-bottom:6px; background:#fdfdfd;">
                                                 <div class="badge <?php echo $item['delivery_status']==='delivered' ? 'delivered' : 'cancelled'; ?>">
                                                     <?php echo ucfirst(str_replace('_',' ', $item['delivery_status'])); ?>
                                                 </div>
-                                                <div style="font-weight:600; color:#2C7A7B; min-width:100px; flex-basis: 120px;">
-                                                    <?php echo ucfirst($item['meal_type']); ?>
-                                                </div>
-                                                <div style="color:#555; font-size: 13px; display: flex; align-items: center; gap: 6px;">
-                                                    <i class="fas fa-clock"></i>
-                                                    <span><?php echo htmlspecialchars($item['time_slot'] ?? 'N/A'); ?></span>
+                                                <div style="display:grid; grid-template-columns: 160px 1fr 120px; align-items:center; font-weight:600; color:#2C7A7B; width:100%;">
+                                                    <span><?php echo ucfirst($item['meal_type']); ?></span>
+                                                    <?php if (!empty($item['meal_name'])): ?>
+                                                        <span style="color:#F39C12; font-weight:400; padding-left:10px;">| <?php echo htmlspecialchars($item['meal_name']); ?></span>
+                                                    <?php else: ?>
+                                                        <span></span>
+                                                    <?php endif; ?>
+                                                    <span style="color:#555; font-size: 13px; display: flex; align-items: center; justify-content:flex-end; gap: 6px;">
+                                                        <i class="fas fa-clock"></i>
+                                                        <span><?php echo htmlspecialchars($item['time_slot'] ?? 'N/A'); ?></span>
+                                                    </span>
                                                 </div>
                                             </div>
                                             <?php endforeach; ?>

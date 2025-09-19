@@ -741,7 +741,7 @@ foreach ($orders as $order) {
         ];
     }
 }
-?><br><br><br><br>
+?><br>
 <?php if(count($grouped_orders) === 0): ?>
     <div class="no-orders">
                     <i class="fas fa-box-open"></i>

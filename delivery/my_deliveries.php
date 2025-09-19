@@ -832,7 +832,7 @@ if (!empty($user_ids)) {
             <h1>My Deliveries</h1>
             <p>Your upcoming assigned deliveries. Today's tasks are active.</p>
         </div>
-<br><br><br><br><br><br><br>
+<br><br>
         <?php if (empty($deliveries_to_display)): ?>
             <div class="no-deliveries"><i class="fas fa-box-open"></i> You have no assigned deliveries yet.</div>
         <?php else: ?>

@@ -81,11 +81,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_subscription']
 // Fetch user's latest non-canceled subscription
 
 // Fetch all non-cancelled subscriptions for the user
-$subs_sql = "SELECT s.*, mp.plan_name, mp.plan_type FROM subscriptions s JOIN meal_plans mp ON s.plan_id = mp.plan_id WHERE s.user_id = ? AND s.status != 'cancelled' ORDER BY s.created_at DESC";
+$subs_sql = "SELECT s.*, mp.plan_name, mp.plan_type FROM subscriptions s JOIN meal_plans mp ON s.plan_id = mp.plan_id WHERE s.user_id = ? AND s.status = 'active' ORDER BY s.created_at DESC";
 $subs_stmt = $conn->prepare($subs_sql);
 $subs_stmt->bind_param("i", $user_id);
 $subs_stmt->execute();
 $subs_result = $subs_stmt->get_result();
+$subscriptions = [];
 $subscriptions = [];
 while ($sub = $subs_result->fetch_assoc()) {
     $sub_id = $sub['subscription_id'];
@@ -97,16 +98,16 @@ while ($sub = $subs_result->fetch_assoc()) {
     $count_stmt->execute();
     $count_result = $count_stmt->get_result()->fetch_assoc();
     $count_stmt->close();
+    // If all meals delivered, mark as completed and skip adding to active subscriptions
     if ($count_result && $count_result['total'] > 0 && $count_result['delivered'] == $count_result['total']) {
-        // Mark as completed if not already
         if (strtolower($sub['status']) !== 'completed') {
             $update_sql = "UPDATE subscriptions SET status = 'completed' WHERE subscription_id = ?";
             $update_stmt = $conn->prepare($update_sql);
             $update_stmt->bind_param("i", $sub_id);
             $update_stmt->execute();
             $update_stmt->close();
-            $sub['status'] = 'completed';
         }
+        continue; // Do not show completed subscriptions here
     }
     $subscriptions[] = $sub;
 }

@@ -123,7 +123,7 @@ if ($subscription_result->num_rows > 0) {
     $has_active_subscription = true;
     $subscription_data = $subscription_result->fetch_assoc();
     
-    // Now, check if a partner is assigned to this subscription at all
+    // Now, check if a partner is assigned to this subscription
     $partner_info = null;
     $partner_sql = "
         SELECT
@@ -140,11 +140,23 @@ if ($subscription_result->num_rows > 0) {
     $partner_stmt->bind_param("i", $subscription_data['subscription_id']);
     $partner_stmt->execute();
     $partner_result = $partner_stmt->get_result();
+
     if ($partner_result->num_rows > 0) {
         $partner_info = $partner_result->fetch_assoc();
         $tracking_data = array_merge($subscription_data, $partner_info);
     }
     $partner_stmt->close();
+
+} else {
+    // No active subscription, check for completed one for renewal prompt
+    $completed_sql = "SELECT * FROM subscriptions WHERE user_id = ? AND status = 'completed' ORDER BY end_date DESC LIMIT 1";
+    $completed_stmt = $conn->prepare($completed_sql);
+    $completed_stmt->bind_param("i", $user_id);
+    $completed_stmt->execute();
+    $completed_result = $completed_stmt->get_result();
+    
+    $completed_stmt->close();
+}
 
     // If a partner is assigned, fetch today's meals
     if ($tracking_data) {
@@ -245,7 +257,6 @@ if ($subscription_result->num_rows > 0) {
         }
         $next_stmt->close();
     }
-}
 
 // Fetch all past deliveries for the active subscription
 $past_deliveries_by_date = [];
@@ -474,8 +485,8 @@ if ($has_active_subscription) {
             gap: 6px;
         }
         .badge.delivered, .status-resolved { 
-            background: #e8f5e9; 
-            color: #2e7d32;
+            background: #27ae60; 
+            color: #fff;
         }
         .badge.cancelled { 
             background: #ffebee; 
@@ -485,10 +496,7 @@ if ($has_active_subscription) {
             background: #fff3e0;
             color: #e65100;
         }
-        .status-resolved {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
+        
 
         @media (max-width: 992px) {
             .tracking-container { grid-template-columns: 1fr; }

@@ -238,26 +238,41 @@ $subscription_query = $db->prepare("
 $subscription_query->bind_param("i", $user_id);
 $subscription_query->execute();
 $subscription_result = $subscription_query->get_result();
+// If no active subscription, check for recently completed one for renewal prompt
 $has_subscription = $subscription_result->num_rows > 0;
 $subscription = $has_subscription ? $subscription_result->fetch_assoc() : null;
+if (!$has_subscription) {
+    $completed_query = $db->prepare("
+        SELECT s.*, mp.plan_name 
+        FROM subscriptions s
+        JOIN meal_plans mp ON s.plan_id = mp.plan_id
+        WHERE s.user_id = ? AND s.status = 'completed' 
+        ORDER BY s.end_date DESC 
+        LIMIT 1
+    ");
+    $completed_query->bind_param("i", $user_id);
+    $completed_query->execute();
+    $completed_result = $completed_query->get_result();
+    $completed_subscription = $completed_result->num_rows > 0 ? $completed_result->fetch_assoc() : null;
+    $completed_query->close();
+}
 // Weekly menu logic for Basic and Premium plans
 $weekly_menu = [];
 $plan_type = strtolower(trim($subscription['plan_name'] ?? ''));
 if ($has_subscription) {
     if ($plan_type === 'basic plan') {
-        // For Basic Plan, always show plan meals (no custom selection)
         $weekly_menu = get_weekly_menu($db, $subscription['plan_id'], $subscription['dietary_preference']);
         $menu_section_title = 'Weekly Menu (Basic Plan)';
     } elseif ($plan_type === 'premium plan') {
-        // For Premium Plan, try user meals first, fallback to plan meals
         $weekly_menu = get_weekly_menu($db, $subscription['plan_id'], $subscription['dietary_preference'], $subscription['subscription_id']);
         $menu_section_title = 'Weekly Menu (Premium Plan)';
     } else {
-        // Fallback for unknown plan types
         $weekly_menu = get_weekly_menu($db, $subscription['plan_id'], $subscription['dietary_preference'], $subscription['subscription_id']);
         $menu_section_title = 'Weekly Menu';
     }
 }
+
+
 
 // Fetch Home and Work addresses for the user (to display both if available)
 $home_address = null;
@@ -501,7 +516,17 @@ $has_orders = !empty($latest_order);
            <!-- Current Subscription Section -->
 <div class="dashboard-section">
     <div class="section-header">
-        <h2 class="section-title">Current Subscription</h2>
+        <h2 class="section-title">
+            <?php 
+            if ($has_subscription) {
+                echo "Current Subscription";
+            } elseif (isset($completed_subscription) && $completed_subscription) {
+                echo "Previous Subscription";
+            } else {
+                echo "Subscription Status";
+            }
+            ?>
+        </h2>
         <?php if($has_subscription): ?>
             <a href="manage_subscriptions.php" class="view-all">Manage Subscription</a>
         <?php endif; ?>
@@ -698,6 +723,24 @@ $has_orders = !empty($latest_order);
                 </div>
             </div>
 
+        <?php elseif(isset($completed_subscription) && $completed_subscription): ?>
+            <div class="info-card">
+                <div class="info-card-header">
+                    <i class="fas fa-history"></i>
+                    <h3 class="info-card-title">Last Completed Plan</h3>
+                </div>
+                <div class="info-card-content">
+                    <strong>Plan Type:</strong> <?php echo htmlspecialchars($completed_subscription['plan_name']); ?><br>
+                    <strong>Schedule:</strong> <?php echo htmlspecialchars($completed_subscription['schedule']); ?><br>
+                    <strong>Period:</strong> <?php echo date("M j, Y", strtotime($completed_subscription['start_date'])) . ' - ' . date("M j, Y", strtotime($completed_subscription['end_date'])); ?><br>
+                    <strong>Status:</strong> <span class="status-badge status-completed" style="background-color: #28a745; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.8em;"><i class="fas fa-check-circle"></i> Completed</span><br>
+                </div>
+                <div style="text-align:center; margin-top:20px;">
+                    <a href="browse_plans.php" class="btn btn-primary pulse-animation">
+                        <i class="fas fa-redo"></i> Add a Subscription
+                    </a>
+                </div>
+            </div>
         <?php else: ?>
             <div class="empty-state">
                 <i class="fas fa-utensils"></i>

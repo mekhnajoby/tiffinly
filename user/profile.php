@@ -33,17 +33,33 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     if(isset($_POST['update_profile'])) {
         // Handle profile update
         $name = $_POST['name'];
-        $phone = $_POST['phone'];
-        
-        $update_query = $db->prepare("UPDATE users SET name = ?, phone = ? WHERE user_id = ?");
-        $update_query->bind_param("ssi", $name, $phone, $user_id);
-        $update_query->execute();
-        
-        // Refresh user data
-        $user['name'] = $name;
-        $user['phone'] = $phone;
-        
-        $success_message = "Profile updated successfully!";
+        $phone = preg_replace('/[^0-9]/', '', $_POST['phone']);
+
+        $validation_errors = [];
+        if (empty($name)) {
+            $validation_errors[] = "Name is required.";
+        } elseif (!preg_match("/^[a-zA-Z\s]{2,50}$/", $name)) {
+            $validation_errors[] = "Name must be 2-50 letters and spaces only.";
+        }
+        if (empty($phone)) {
+            $validation_errors[] = "Phone number is required.";
+        } elseif (!preg_match("/^[6-9]\d{9}$/", $phone)) {
+            $validation_errors[] = "Please enter a valid 10-digit Indian phone number.";
+        }
+
+        if (!empty($validation_errors)) {
+            $error_message = implode("<br>", $validation_errors);
+        } else {
+            $update_query = $db->prepare("UPDATE users SET name = ?, phone = ? WHERE user_id = ?");
+            $update_query->bind_param("ssi", $name, $phone, $user_id);
+            $update_query->execute();
+            
+            // Refresh user data
+            $user['name'] = $name;
+            $user['phone'] = $phone;
+            
+            $success_message = "Profile updated successfully!";
+        }
     }
     
     if(isset($_POST['update_password'])) {
@@ -51,16 +67,29 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         $current_password = $_POST['current_password'];
         $new_password = $_POST['new_password'];
         $confirm_password = $_POST['confirm_password'];
-        
-        // Verify current password
-        $verify_query = $db->prepare("SELECT password FROM users WHERE user_id = ?");
-        $verify_query->bind_param("i", $user_id);
-        $verify_query->execute();
-        $verify_result = $verify_query->get_result();
-        $db_password = $verify_result->fetch_assoc()['password'];
-        
-        if(password_verify($current_password, $db_password)) {
-            if($new_password === $confirm_password) {
+
+        $validation_errors = [];
+        if (empty($current_password) || empty($new_password) || empty($confirm_password)) {
+            $validation_errors[] = "All password fields are required.";
+        } elseif (strlen($new_password) < 8) {
+            $validation_errors[] = "New password must be at least 8 characters long.";
+        } elseif (!preg_match('/[A-Z]/', $new_password) || !preg_match('/[a-z]/', $new_password) || !preg_match('/\d/', $new_password) || !preg_match('/[^A-Za-z0-9]/', $new_password)) {
+            $validation_errors[] = "New password must include uppercase, lowercase, number, and a special character.";
+        } elseif ($new_password !== $confirm_password) {
+            $validation_errors[] = "New passwords do not match!";
+        }
+
+        if (!empty($validation_errors)) {
+            $error_message = implode("<br>", $validation_errors);
+        } else {
+            // Verify current password
+            $verify_query = $db->prepare("SELECT password FROM users WHERE user_id = ?");
+            $verify_query->bind_param("i", $user_id);
+            $verify_query->execute();
+            $verify_result = $verify_query->get_result();
+            $db_password = $verify_result->fetch_assoc()['password'];
+            
+            if(password_verify($current_password, $db_password)) {
                 $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
                 $update_query = $db->prepare("UPDATE users SET password = ? WHERE user_id = ?");
                 $update_query->bind_param("si", $hashed_password, $user_id);
@@ -68,44 +97,57 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
                 $success_message = "Password updated successfully!";
             } else {
-                $error_message = "New passwords do not match!";
+                $error_message = "Current password is incorrect!";
             }
-        } else {
-            $error_message = "Current password is incorrect!";
         }
     }
     
     if(isset($_POST['add_address'])) {
-    $address_type = $_POST['address_type'];
-    $line1 = trim($_POST['line1']);
-    $line2 = trim($_POST['line2']);
-    $city = trim($_POST['city']);
-    $state = trim($_POST['state']);
-    $pincode = trim($_POST['pincode']);
-    $landmark = trim($_POST['landmark']);
+        $address_type = $_POST['address_type'];
+        $line1 = trim($_POST['line1']);
+        $line2 = trim($_POST['line2']);
+        $city = trim($_POST['city']);
+        $state = trim($_POST['state']);
+        $pincode = trim($_POST['pincode']);
+        $landmark = trim($_POST['landmark']);
 
-    // Check if this user already has an address of this type
-    $check_query = $db->prepare("SELECT address_id FROM addresses WHERE user_id = ? AND address_type = ?");
-    $check_query->bind_param("is", $user_id, $address_type);
-    $check_query->execute();
-    $check_result = $check_query->get_result();
-
-    if($check_result->num_rows > 0) {
-        $error_message = "You already have a $address_type address. Please delete it before adding a new one.";
-    } else {
-        $insert_query = $db->prepare("INSERT INTO addresses (user_id, address_type, line1, line2, city, state, pincode, landmark) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $insert_query->bind_param("isssssss", $user_id, $address_type, $line1, $line2, $city, $state, $pincode, $landmark);
-        if ($insert_query->execute()) {
-            $success_message = ucfirst($address_type) . " address added successfully!";
-        } else {
-            $error_message = "Failed to add address. Please try again.";
+        $validation_errors = [];
+        if (empty($address_type)) { $validation_errors[] = "Address type is required."; }
+        if (empty($line1)) { $validation_errors[] = "Address Line 1 is required."; }
+        if (empty($city)) { $validation_errors[] = "City is required."; }
+        if (empty($state)) { $validation_errors[] = "State is required."; }
+        if (empty($pincode)) {
+            $validation_errors[] = "Pincode is required.";
+        } elseif (!preg_match('/^[1-9][0-9]{5}$/', $pincode)) {
+            $validation_errors[] = "Pincode must be a valid 6-digit number and should not start with 0.";
         }
-    }
 
-    // Refresh addresses
-    $address_query->execute();
-    $address_result = $address_query->get_result();
-}
+        if (!empty($validation_errors)) {
+            $error_message = implode("<br>", $validation_errors);
+        } else {
+            // Check if this user already has an address of this type
+            $check_query = $db->prepare("SELECT address_id FROM addresses WHERE user_id = ? AND address_type = ?");
+            $check_query->bind_param("is", $user_id, $address_type);
+            $check_query->execute();
+            $check_result = $check_query->get_result();
+
+            if($check_result->num_rows > 0) {
+                $error_message = "You already have a $address_type address. Please delete it before adding a new one.";
+            } else {
+                $insert_query = $db->prepare("INSERT INTO addresses (user_id, address_type, line1, line2, city, state, pincode, landmark) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                $insert_query->bind_param("isssssss", $user_id, $address_type, $line1, $line2, $city, $state, $pincode, $landmark);
+                if ($insert_query->execute()) {
+                    $success_message = ucfirst($address_type) . " address added successfully!";
+                } else {
+                    $error_message = "Failed to add address. Please try again.";
+                }
+            }
+        }
+
+        // Refresh addresses
+        $address_query->execute();
+        $address_result = $address_query->get_result();
+    }
 
     
     if(isset($_POST['set_default_address'])) {
@@ -457,7 +499,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <div class="form-group">
         <label for="pincode">Pincode</label>
-        <input type="text" id="pincode" name="pincode" class="form-control" required>
+        <input type="text" id="pincode" name="pincode" class="form-control" required pattern="[1-9][0-9]{5}" maxlength="6" title="Pincode must be 6 digits and not start with 0.">
     </div>
 
     <div class="form-group">
