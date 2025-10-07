@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiffinly - Technical Documentation</title>
+    <style>
+        :root {
+            --primary: #2C7A7B;
+            --secondary: #4FD1C5;
+            --dark: #2D3748;
+            --light: #F7FAFC;
+            --gray: #A0AEC0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        h1, h2, h3, h4 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .feature {
+            background: var(--light);
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            border-radius: 4px;
+        }
+        code {
+            background: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            color: #2d3748;
+        }
+        pre {
+            background: #2d3748;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 0.9em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--primary);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Tiffinly - Technical Documentation</h1>
+        <p>A comprehensive guide to the Tiffinly Food Delivery Platform based on codebase analysis.</p>
+    </div>
+
+    <div class="card">
+        <h2>System Overview</h2>
+        <p>Tiffinly is a PHP-based web application designed to manage a meal delivery service. It operates on a subscription model, connecting customers with delivery partners. The platform is divided into three main user-facing sections: a customer portal for ordering and management, a delivery partner dashboard for handling assignments, and an admin panel for complete system oversight.</p>
+    </div>
+
+    <div class="card">
+        <h2>Tech Stack</h2>
+        <div class="grid">
+            <div class="feature">
+                <h4>Frontend</h4>
+                <ul>
+                    <li><strong>HTML5, CSS3, JavaScript:</strong> Standard web technologies.</li>
+                    <li><strong>Bootstrap:</strong> For responsive UI components.</li>
+                    <li><strong>jQuery & AJAX:</strong> Used for dynamic content loading and form submissions without page reloads (e.g., in <code>ajax/cancel_meal.php</code>).</li>
+                </ul>
+            </div>
+            <div class="feature">
+                <h4>Backend</h4>
+                <ul>
+                    <li><strong>PHP 8.2+:</strong> Server-side scripting language.</li>
+                    <li><strong>MySQL (MariaDB):</strong> Relational database for data persistence.</li>
+                    <li><strong>Apache:</strong> Web server hosting the application.</li>
+                </ul>
+            </div>
+            <div class="feature">
+                <h4>Integrations & Libraries</h4>
+                <ul>
+                    <li><strong>Razorpay:</strong> Integrated for processing partner payments (seen in <code>manage_partners.php</code>).</li>
+                    <li><strong>Session-based Authentication:</strong> Manages user login state via PHP sessions.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Core Modules & Functionalities</h2>
+        <p>The application's functionality is segregated by user roles, primarily managed through distinct directories. Each feature is handled by a specific page, providing clear, modular code.</p>
+        <div class="grid">
+            <div class="feature">
+                <h4>Admin Module (<code>/admin</code>)</h4>
+                <p>Provides full control over the platform.</p>
+                <ul>
+                    <li><strong>Dashboard:</strong> Overview of system statistics (<code>admin_dashboard.php</code>).</li>
+                    <li><strong>User Management:</strong> CRUD operations for all users (<code>manage_users.php</code>).</li>
+                    <li><strong>Partner Management:</strong> Onboard partners and process payments (<code>manage_partners.php</code>).</li>
+                    <li><strong>Subscription & Plan Management:</strong> Oversee subscriptions and meal plans (<code>manage_subscriptions.php</code>, <code>manage_plans.php</code>).</li>
+                    <li><strong>Menu & Meal Management:</strong> Control available meals and popular items (<code>manage_menu.php</code>, <code>manage_popular_meals.php</code>).</li>
+                    <li><strong>Delivery Oversight:</strong> Monitor pending and ongoing deliveries (<code>manage_delivery.php</code>, <code>pending_delivery.php</code>).</li>
+                </ul>
+            </div>
+            <div class="feature">
+                <h4>Delivery Partner Module (<code>/delivery</code>)</h4>
+                <p>Portal for delivery partners to manage their tasks.</p>
+                <ul>
+                    <li><strong>Dashboard:</strong> Summary of deliveries and earnings (<code>partner_dashboard.php</code>).</li>
+                    <li><strong>Order Management:</strong> View and accept new delivery assignments (<code>available_orders.php</code>).</li>
+                    <li><strong>Delivery Tracking:</strong> Track active and completed deliveries (<code>my_deliveries.php</code>).</li>
+                    <li><strong>Status Updates:</strong> Mark order status (e.g., 'Delivered') (<code>update_delivery_status.php</code>).</li>
+                    <li><strong>Earnings & History:</strong> View payment history and performance (<code>earnings.php</code>, <code>delivery_history.php</code>).</li>
+                    <li><strong>Issue Logging:</strong> Report problems with a delivery (<code>log_issues.php</code>).</li>
+                </ul>
+            </div>
+            <div class="feature">
+                <h4>Customer-Facing Module (Root & <code>/user</code>)</h4>
+                <p>Interface for customers to interact with the service.</p>
+                <ul>
+                    <li><strong>Authentication:</strong> User login and registration (<code>login.php</code>, <code>register.php</code>).</li>
+                    <li><strong>Subscription Management:</strong> A full suite for handling subscriptions, including browsing plans (<code>user/browse_plans.php</code>), configuring schedules (<code>user/select_plan.php</code>), customizing meals (<code>user/customize_meals.php</code>), and managing active subscriptions (<code>user/manage_subscriptions.php</code>).</li>
+                    <li><strong>Meal & Delivery Management:</strong> Set delivery preferences in <code>user/delivery_preferences.php</code> and cancel individual meals via <code>ajax/cancel_meal.php</code>.</li>
+                    <li><strong>Password Recovery:</strong> Reset forgotten passwords (<code>forgot_password.php</code>).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Database Schema & Relationships</h2>
+        <p>The application's logic is driven by a relational database. The diagram below illustrates how the primary tables are interconnected.</p>
+        
+        <img src="guide_dig.jpg" style="display: block; width: 50%; height: auto; margin-left: auto; margin-right: auto; border-radius:0px; margin-bottom: 0rem;">
+        <h4>Table Descriptions</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Table Name</th>
+                    <th>Purpose & Key Relationships</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><code>addresses</code></td><td>Stores multiple delivery addresses for each user. Linked to <code>users</code>.</td></tr>
+                <tr><td><code>auth_tokens</code></td><td>Supports 'remember me' functionality for user sessions by storing authentication tokens.</td></tr>
+                <tr><td><code>deliveries</code></td><td>Represents a scheduled meal delivery for a subscription on a specific date. This table is used for tracking purposes.</td></tr>
+                <tr><td><code>delivery_assignments</code></td><td><strong>The operational heart of the system.</strong> Assigns a specific delivery to a partner, tracking the meal, status, and payment for that assignment.</td></tr>
+                <tr><td><code>delivery_issues</code></td><td>Logs any problems reported by partners regarding a specific delivery assignment.</td></tr>
+                <tr><td><code>delivery_partner_details</code></td><td>Stores partner-specific information like vehicle and license details. Linked one-to-one with users who have the 'delivery' role.</td></tr>
+                <tr><td><code>delivery_preferences</code></td><td>Stores user preferences for delivery times and locations for different meal types (breakfast, lunch, dinner).</td></tr>
+                <tr><td><code>feedback</code></td><td>Stores feedback from users about meals, service, or the platform, including ratings and comments.</td></tr>
+                <tr><td><code>inquiries</code></td><td>Captures messages or contact form submissions from users and tracks the response status.</td></tr>
+                <tr><td><code>meals</code></td><td>Defines all available food items, linked to a <code>meal_category</code>.</td></tr>
+                <tr><td><code>meal_categories</code></td><td>Groups meals by type (e.g., Breakfast, Lunch, Dinner) and dietary option (veg, non_veg).</td></tr>
+                <tr><td><code>meal_plans</code></td><td>Defines the main subscription tiers (e.g., Basic, Premium) with their base price and description.</td></tr>
+                <tr><td><code>partner_payments</code></td><td>Logs payments made to delivery partners for completed deliveries, often containing a transaction reference.</td></tr>
+                <tr><td><code>payments</code></td><td>Records customer payments for their subscriptions, linked to a user and subscription.</td></tr>
+                <tr><td><code>plan_features</code></td><td>Lists the features associated with each meal plan (e.g., "Customizable menu").</td></tr>
+                <tr><td><code>plan_images</code></td><td>Stores paths to images for each meal plan, used for frontend display.</td></tr>
+                <tr><td><code>plan_meals</code></td><td>Defines the default weekly meal schedule for each subscription plan.</td></tr>
+                <tr><td><code>plan_schedule_options</code></td><td>Defines the pricing multipliers for different subscription durations (e.g., weekdays, full week).</td></tr>
+                <tr><td><code>popular_meals</code></td><td>A simple table to highlight specific meals on the frontend, including a dedicated image and description.</td></tr>
+                <tr><td><code>subscriptions</code></td><td>Links a <code>user</code> to a <code>meal_plan</code>, defining the core details of a customer's service, including start/end dates and status.</td></tr>
+                <tr><td><code>subscription_meals</code></td><td>Stores custom meal selections for a specific subscription, overriding the default `plan_meals`.</td></tr>
+                <tr><td><code>users</code></td><td>Central table for all individuals. Stores credentials, contact information, and their <strong>role</strong> (user, admin, delivery).</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <div class="card">
+            <h2>System Workflow: From Subscription to Payout</h2>
+            <ol>
+                <li><strong>Plan Selection:</strong> A customer browses plans in <code>user/browse_plans.php</code> and configures their subscription (plan type, schedule, dates) in <code>user/select_plan.php</code>.</li>
+                <li><strong>Customization & Cart:</strong> If the plan is "Premium," the user customizes their weekly menu in <code>user/customize_meals.php</code>. The finalized plan is saved as a <code>pending</code> subscription.</li>
+                <li><strong>Customer Payment:</strong> The user completes the payment via Razorpay on the <code>user/payment.php</code> page.</li>
+                <li><strong>Subscription Activation:</strong> Upon successful payment, the subscription status is updated to <code>active</code>, and a script automatically generates all individual <code>delivery</code> records for the entire subscription period.</li>
+                <li><strong>Order Availability:</strong> The new, unassigned subscription appears on the <code>delivery/available_orders.php</code> page for all delivery partners to see.</li>
+                <li><strong>Partner Acceptance:</strong> A delivery partner accepts the subscription. This single action creates all the necessary <code>delivery_assignments</code> for the entire duration of that subscription, linking them to that partner.</li>
+                <li><strong>Delivery Execution:</strong> The partner uses their dashboard (<code>delivery/my_deliveries.php</code>) to view their assigned deliveries and update their status (e.g., 'out_for_delivery', 'delivered').</li>
+                <li><strong>Payout Calculation:</strong> The <code>admin/manage_partners.php</code> page displays a list of all completed but 'unpaid' deliveries, grouped by partner and date. The payment amount is calculated based on logic in <code>admin/process_partner_payment.php</code>, which includes base rates and potential bonuses.</li>
+                <li><strong>Admin Payout:</strong> An admin initiates the payout from the [manage_partners.php] interface, triggering a payment to the partner via Razorpay.</li>
+                <li><strong>Record Update:</strong> Upon successful payout, a record is created in <code>partner_payments</code>, and the corresponding `delivery_assignments` are marked as 'paid'.</li>
+            </ol>
+        </div>
+
+    <div class="card">
+        <h2>Security Considerations</h2>
+        <ul>
+            <li><strong>Authentication:</strong> Role-based access is enforced using session variables (e.g., <code>$_SESSION['role']</code>), with checks at the beginning of sensitive files (<code>auth_check.php</code>).</li>
+            <li><strong>SQL Injection:</strong> The application uses prepared statements (<code>$stmt->prepare()</code> and <code>$stmt->bind_param()</code>) to prevent SQL injection attacks, which is a critical security practice.</li>
+            <li><strong>Password Security:</strong> While not directly visible, a robust system would use <code>password_hash()</code> and <code>password_verify()</code> for storing and checking user passwords.</li>
+        </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+</body>
+</html>
