@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-# Tiffinly Sept 9 Final
+# Tiffinly 
 
 ## Overview
 Tiffinly is a meal subscription and delivery management system designed to streamline the process of ordering, customizing, and delivering meals. This project provides a complete backend and frontend solution for users, partners, and administrators.
@@ -28,7 +28,7 @@ Tiffinly is a meal subscription and delivery management system designed to strea
 - `user/` - User-facing modules (plans, cart, profile, support, etc.)
 
 ## Database
-- SQL files for database schema: `tiffinlysept9db.sql`, `tiffinlysept9dbwithsessionfinal.sql`
+- SQL files for database schema: `tiffinlyfinaldb.sql`
 
 ## Getting Started
 1. Clone the repository:
