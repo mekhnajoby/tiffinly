@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 19, 2025 at 09:15 PM
+-- Generation Time: Sep 25, 2025 at 09:15 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -102,8 +102,8 @@ INSERT INTO `deliveries` (`delivery_id`, `subscription_id`, `delivery_date`, `st
 (326, 64, '2025-09-17', 'scheduled', 'paid', '08:00:00'),
 (327, 64, '2025-09-18', 'scheduled', 'paid', '08:00:00'),
 (328, 64, '2025-09-19', 'scheduled', 'paid', '08:00:00'),
-(329, 64, '2025-09-22', 'scheduled', 'unpaid', '08:00:00'),
-(330, 64, '2025-09-23', 'scheduled', 'unpaid', '08:00:00'),
+(329, 64, '2025-09-22', 'scheduled', 'paid', '08:00:00'),
+(330, 64, '2025-09-23', 'scheduled', 'paid', '08:00:00'),
 (331, 64, '2025-09-24', 'scheduled', 'unpaid', '08:00:00'),
 (332, 64, '2025-09-25', 'scheduled', 'unpaid', '08:00:00'),
 (333, 64, '2025-09-26', 'scheduled', 'unpaid', '08:00:00'),
@@ -237,18 +237,18 @@ INSERT INTO `delivery_assignments` (`assignment_id`, `subscription_id`, `deliver
 (61, 64, '2025-09-19', 16, '2025-09-02 03:13:26', 'delivered', 'breakfast', 17, 41, 'paid'),
 (62, 64, '2025-09-19', 16, '2025-09-02 03:13:26', 'delivered', 'lunch', 18, 41, 'paid'),
 (63, 64, '2025-09-19', 16, '2025-09-02 03:13:26', 'delivered', 'dinner', 20, 41, 'paid'),
-(64, 64, '2025-09-22', 16, '2025-09-02 03:13:26', 'pending', 'breakfast', 1, NULL, 'unpaid'),
-(65, 64, '2025-09-22', 16, '2025-09-02 03:13:26', 'pending', 'lunch', 114, NULL, 'unpaid'),
-(66, 64, '2025-09-22', 16, '2025-09-02 03:13:26', 'pending', 'dinner', 3, NULL, 'unpaid'),
-(67, 64, '2025-09-23', 16, '2025-09-02 03:13:26', 'pending', 'breakfast', 5, NULL, 'unpaid'),
-(68, 64, '2025-09-23', 16, '2025-09-02 03:13:26', 'pending', 'lunch', 6, NULL, 'unpaid'),
-(69, 64, '2025-09-23', 16, '2025-09-02 03:13:26', 'pending', 'dinner', 7, NULL, 'unpaid'),
-(70, 64, '2025-09-24', 16, '2025-09-02 03:13:26', 'pending', 'breakfast', 9, NULL, 'unpaid'),
-(71, 64, '2025-09-24', 16, '2025-09-02 03:13:26', 'pending', 'lunch', 10, NULL, 'unpaid'),
-(72, 64, '2025-09-24', 16, '2025-09-02 03:13:26', 'pending', 'dinner', 11, NULL, 'unpaid'),
-(73, 64, '2025-09-25', 16, '2025-09-02 03:13:26', 'pending', 'breakfast', 13, NULL, 'unpaid'),
-(74, 64, '2025-09-25', 16, '2025-09-02 03:13:26', 'pending', 'lunch', 14, NULL, 'unpaid'),
-(75, 64, '2025-09-25', 16, '2025-09-02 03:13:26', 'pending', 'dinner', 15, NULL, 'unpaid'),
+(64, 64, '2025-09-22', 16, '2025-09-02 03:13:26', 'delivered', 'breakfast', 1, 48, 'paid'),
+(65, 64, '2025-09-22', 16, '2025-09-02 03:13:26', 'delivered', 'lunch', 114, 48, 'paid'),
+(66, 64, '2025-09-22', 16, '2025-09-02 03:13:26', 'delivered', 'dinner', 3, 48, 'paid'),
+(67, 64, '2025-09-23', 16, '2025-09-02 03:13:26', 'delivered', 'breakfast', 5, 49, 'paid'),
+(68, 64, '2025-09-23', 16, '2025-09-02 03:13:26', 'delivered', 'lunch', 6, 49, 'paid'),
+(69, 64, '2025-09-23', 16, '2025-09-02 03:13:26', 'delivered', 'dinner', 7, 49, 'paid'),
+(70, 64, '2025-09-24', 16, '2025-09-02 03:13:26', 'delivered', 'breakfast', 9, NULL, 'unpaid'),
+(71, 64, '2025-09-24', 16, '2025-09-02 03:13:26', 'delivered', 'lunch', 10, NULL, 'unpaid'),
+(72, 64, '2025-09-24', 16, '2025-09-02 03:13:26', 'delivered', 'dinner', 11, NULL, 'unpaid'),
+(73, 64, '2025-09-25', 16, '2025-09-02 03:13:26', 'delivered', 'breakfast', 13, NULL, 'unpaid'),
+(74, 64, '2025-09-25', 16, '2025-09-02 03:13:26', 'delivered', 'lunch', 14, NULL, 'unpaid'),
+(75, 64, '2025-09-25', 16, '2025-09-02 03:13:26', 'delivered', 'dinner', 15, NULL, 'unpaid'),
 (76, 64, '2025-09-26', 16, '2025-09-02 03:18:28', 'pending', 'breakfast', 17, NULL, 'unpaid'),
 (77, 64, '2025-09-26', 16, '2025-09-02 03:18:28', 'pending', 'lunch', 18, NULL, 'unpaid'),
 (78, 64, '2025-09-26', 16, '2025-09-02 03:18:28', 'pending', 'dinner', 20, NULL, 'unpaid'),
@@ -689,7 +689,9 @@ INSERT INTO `partner_payments` (`payment_id`, `partner_id`, `subscription_id`, `
 (44, 16, 64, '2025-09-17', 120.00, 3, 'Razorpay', 'success', 'pay_RJZ7az2fDijUJR', '2025-09-19 18:51:36'),
 (45, 16, 66, '2025-09-16', 120.00, 3, 'Razorpay', 'success', 'pay_RJZ82Z1MkVn66y', '2025-09-19 18:52:02'),
 (46, 16, 64, '2025-09-16', 120.00, 3, 'Razorpay', 'success', 'pay_RJZ8OTNY7g6iSm', '2025-09-19 18:52:22'),
-(47, 16, 66, '2025-09-15', 80.00, 2, 'Razorpay', 'success', 'pay_RJZ8jaZkRyH1Xi', '2025-09-19 18:52:41');
+(47, 16, 66, '2025-09-15', 80.00, 2, 'Razorpay', 'success', 'pay_RJZ8jaZkRyH1Xi', '2025-09-19 18:52:41'),
+(48, 16, 64, '2025-09-22', 120.00, 3, 'Razorpay', 'success', 'pay_RLwhvrMwxbRdVY', '2025-09-25 19:13:59'),
+(49, 16, 64, '2025-09-23', 120.00, 3, 'Razorpay', 'success', 'pay_RLwiP9CmhEVJTp', '2025-09-25 19:14:26');
 
 -- --------------------------------------------------------
 
@@ -1413,7 +1415,7 @@ ALTER TABLE `meal_plans`
 -- AUTO_INCREMENT for table `partner_payments`
 --
 ALTER TABLE `partner_payments`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `payments`

@@ -241,6 +241,37 @@ $subscription_result = $subscription_query->get_result();
 // If no active subscription, check for recently completed one for renewal prompt
 $has_subscription = $subscription_result->num_rows > 0;
 $subscription = $has_subscription ? $subscription_result->fetch_assoc() : null;
+
+if ($has_subscription) {
+    // Check if subscription should be marked as completed
+    $today = date('Y-m-d');
+    if ($subscription['end_date'] < $today) {
+        $update_sql = "UPDATE subscriptions SET status = 'completed' WHERE subscription_id = ?";
+        $update_stmt = $db->prepare($update_sql);
+        $update_stmt->bind_param("i", $subscription['subscription_id']);
+        $update_stmt->execute();
+        $update_stmt->close();
+        $has_subscription = false;
+        $subscription = null;
+    } else {
+        $all_delivered_sql = "SELECT COUNT(*) as total, SUM(CASE WHEN status IN ('delivered','completed') THEN 1 ELSE 0 END) as delivered FROM delivery_assignments WHERE subscription_id = ?";
+        $all_stmt = $db->prepare($all_delivered_sql);
+        $all_stmt->bind_param("i", $subscription['subscription_id']);
+        $all_stmt->execute();
+        $all_result = $all_stmt->get_result()->fetch_assoc();
+        $all_stmt->close();
+        if ($all_result['total'] > 0 && $all_result['delivered'] == $all_result['total']) {
+            $update_sql = "UPDATE subscriptions SET status = 'completed' WHERE subscription_id = ?";
+            $update_stmt = $db->prepare($update_sql);
+            $update_stmt->bind_param("i", $subscription['subscription_id']);
+            $update_stmt->execute();
+            $update_stmt->close();
+            $has_subscription = false;
+            $subscription = null;
+        }
+    }
+}
+
 if (!$has_subscription) {
     $completed_query = $db->prepare("
         SELECT s.*, mp.plan_name 

@@ -92,6 +92,19 @@ while ($sub = $subs_result->fetch_assoc()) {
     $sub_id = $sub['subscription_id'];
     $end_date = $sub['end_date'];
     $today = date('Y-m-d');
+
+    // If end_date is past, mark as completed
+    if ($end_date < $today) {
+        if (strtolower($sub['status']) !== 'completed') {
+            $update_sql = "UPDATE subscriptions SET status = 'completed' WHERE subscription_id = ?";
+            $update_stmt = $conn->prepare($update_sql);
+            $update_stmt->bind_param("i", $sub_id);
+            $update_stmt->execute();
+            $update_stmt->close();
+        }
+        continue; // Do not show completed subscriptions here
+    }
+
     $count_sql = "SELECT COUNT(*) as total, SUM(CASE WHEN status IN ('delivered','completed') THEN 1 ELSE 0 END) as delivered FROM delivery_assignments WHERE subscription_id = ?";
     $count_stmt = $conn->prepare($count_sql);
     $count_stmt->bind_param("i", $sub_id);

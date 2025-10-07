@@ -122,40 +122,71 @@ $subscription_result = $stmt_check->get_result();
 if ($subscription_result->num_rows > 0) {
     $has_active_subscription = true;
     $subscription_data = $subscription_result->fetch_assoc();
-    
-    // Now, check if a partner is assigned to this subscription
-    $partner_info = null;
-    $partner_sql = "
-        SELECT
-            p.user_id as partner_id,
-            p.name AS partner_name, p.phone AS partner_phone,
-            dpd.vehicle_type, dpd.vehicle_number
-        FROM delivery_assignments da
-        LEFT JOIN users p ON da.partner_id = p.user_id
-        LEFT JOIN delivery_partner_details dpd ON da.partner_id = dpd.partner_id
-        WHERE da.subscription_id = ? AND da.partner_id IS NOT NULL
-        LIMIT 1
-    ";
-    $partner_stmt = $conn->prepare($partner_sql);
-    $partner_stmt->bind_param("i", $subscription_data['subscription_id']);
-    $partner_stmt->execute();
-    $partner_result = $partner_stmt->get_result();
 
-    if ($partner_result->num_rows > 0) {
-        $partner_info = $partner_result->fetch_assoc();
-        $tracking_data = array_merge($subscription_data, $partner_info);
+    // Check if subscription should be marked as completed
+    $today = date('Y-m-d');
+    if ($subscription_data['end_date'] < $today) {
+        $update_sql = "UPDATE subscriptions SET status = 'completed' WHERE subscription_id = ?";
+        $update_stmt = $conn->prepare($update_sql);
+        $update_stmt->bind_param("i", $subscription_data['subscription_id']);
+        $update_stmt->execute();
+        $update_stmt->close();
+        $has_active_subscription = false;
+        $subscription_data = null;
+        $tracking_data = null;
+    } else {
+        $all_delivered_sql = "SELECT COUNT(*) as total, SUM(CASE WHEN status IN ('delivered','completed') THEN 1 ELSE 0 END) as delivered FROM delivery_assignments WHERE subscription_id = ?";
+        $all_stmt = $conn->prepare($all_delivered_sql);
+        $all_stmt->bind_param("i", $subscription_data['subscription_id']);
+        $all_stmt->execute();
+        $all_result = $all_stmt->get_result()->fetch_assoc();
+        $all_stmt->close();
+        if ($all_result['total'] > 0 && $all_result['delivered'] == $all_result['total']) {
+            $update_sql = "UPDATE subscriptions SET status = 'completed' WHERE subscription_id = ?";
+            $update_stmt = $conn->prepare($update_sql);
+            $update_stmt->bind_param("i", $subscription_data['subscription_id']);
+            $update_stmt->execute();
+            $update_stmt->close();
+            $has_active_subscription = false;
+            $subscription_data = null;
+            $tracking_data = null;
+        }
     }
-    $partner_stmt->close();
 
-} else {
-    // No active subscription, check for completed one for renewal prompt
-    $completed_sql = "SELECT * FROM subscriptions WHERE user_id = ? AND status = 'completed' ORDER BY end_date DESC LIMIT 1";
-    $completed_stmt = $conn->prepare($completed_sql);
-    $completed_stmt->bind_param("i", $user_id);
-    $completed_stmt->execute();
-    $completed_result = $completed_stmt->get_result();
-    
-    $completed_stmt->close();
+    if ($has_active_subscription) {
+        // Now, check if a partner is assigned to this subscription
+        $partner_info = null;
+        $partner_sql = "
+            SELECT
+                p.user_id as partner_id,
+                p.name AS partner_name, p.phone AS partner_phone,
+                dpd.vehicle_type, dpd.vehicle_number
+            FROM delivery_assignments da
+            LEFT JOIN users p ON da.partner_id = p.user_id
+            LEFT JOIN delivery_partner_details dpd ON da.partner_id = dpd.partner_id
+            WHERE da.subscription_id = ? AND da.partner_id IS NOT NULL
+            LIMIT 1
+        ";
+        $partner_stmt = $conn->prepare($partner_sql);
+        $partner_stmt->bind_param("i", $subscription_data['subscription_id']);
+        $partner_stmt->execute();
+        $partner_result = $partner_stmt->get_result();
+
+        if ($partner_result->num_rows > 0) {
+            $partner_info = $partner_result->fetch_assoc();
+            $tracking_data = array_merge($subscription_data, $partner_info);
+        }
+        $partner_stmt->close();
+    } else {
+        // No active subscription, check for completed one for renewal prompt
+        $completed_sql = "SELECT * FROM subscriptions WHERE user_id = ? AND status = 'completed' ORDER BY end_date DESC LIMIT 1";
+        $completed_stmt = $conn->prepare($completed_sql);
+        $completed_stmt->bind_param("i", $user_id);
+        $completed_stmt->execute();
+        $completed_result = $completed_stmt->get_result();
+        
+        $completed_stmt->close();
+    }
 }
 
     // If a partner is assigned, fetch today's meals
